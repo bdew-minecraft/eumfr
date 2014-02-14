@@ -1,0 +1,77 @@
+buildscript {
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+version = "1.2.0"
+
+if (project.hasProperty('buildnum')) {
+    project.version = project.version + '.' + project.buildnum
+} else {
+    project.version = project.version + '-dev'
+}
+
+group= "net.bdew.gendustry"
+archivesBaseName = "deps"
+
+minecraft {
+    version = "1.6.4-9.11.1.964"
+}
+
+apply from: 'downloader.gradle'
+
+addGitDep("mfr","https://github.com/skyboy/MineFactoryReloaded.git","4a627b31b7f47fc9a9361ffb3e11326f2d15cc8c")
+
+
+afterEvaluate {
+    deobfBinJar.dependsOn(getDeps)
+    sourceMainJava.dependsOn(getDeps)
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'build/deps/mfr/src'
+            include 'powercrystals/minefactoryreloaded/api/**'
+        }
+    }
+}
+
+genIntellijRuns {
+    enabled = false
+}
+
+jar {
+    classifier "obf"
+}
+
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allSource
+    rootProject.ext.depSourceJarPath = archivePath
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    rootProject.ext.depJarPath = archivePath
+}
+
+configurations { deps }
+artifacts { 
+    deps deobfJar
+    deps sourceJar
+}

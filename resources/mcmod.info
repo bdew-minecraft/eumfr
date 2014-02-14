@@ -1,0 +1,20 @@
+[
+{
+  "modid": "eu_mfr",
+  "name": "EU/MFR Integration",
+  "description": "",
+  "version": "@EU_MFR_VER@",
+  "url": "bdew.net",
+  "updateUrl": "",
+  "authorList": [
+    "bdew"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
